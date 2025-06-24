@@ -38,12 +38,15 @@ services:
     build:
       target: bolt-ai-development
     env_file: '.env.local'
+    networks:
+      - dokploy-network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bolt-dev.rule=Host(`bolt.dokploy.orb.local`)"
       - "traefik.http.routers.bolt-dev.entrypoints=websecure"
       - "traefik.http.routers.bolt-dev.tls=true"
       - "traefik.http.services.bolt-dev.loadbalancer.server.port=5173"
+      - "traefik.docker.network=dokploy-network"
     environment:
       - NODE_ENV=development
       - VITE_HMR_PROTOCOL=ws
@@ -96,3 +99,7 @@ services:
     command: pnpm run dockerstart
     profiles:
       - prebuilt
+
+networks:
+  dokploy-network:
+    external: true
