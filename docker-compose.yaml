@@ -42,7 +42,7 @@ services:
       - dokploy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bolt-dev.rule=Host(`bolt.dokploy.orb.local`)"
+      - "traefik.http.routers.bolt-dev.rule=Host(`dokploy.orb.local`)"
       - "traefik.http.routers.bolt-dev.entrypoints=websecure"
       - "traefik.http.routers.bolt-dev.tls=true"
       - "traefik.http.services.bolt-dev.loadbalancer.server.port=5173"
