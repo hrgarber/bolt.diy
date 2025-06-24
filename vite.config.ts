@@ -146,9 +146,6 @@ export default defineConfig((config) => {
         },
       },
     },
-    server: {
-      allowedHosts: ['dockploy.orb.local'],
-    },
   };
 });
 

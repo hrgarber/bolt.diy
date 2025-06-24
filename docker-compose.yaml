@@ -42,11 +42,18 @@ services:
       - dokploy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bolt-dev.rule=Host(`dokploy.orb.local`)"
+      - "traefik.http.routers.bolt-dev.rule=Host(`dokploy.orb.local`) && PathPrefix(`/bolt`)"
       - "traefik.http.routers.bolt-dev.entrypoints=websecure"
       - "traefik.http.routers.bolt-dev.tls=true"
       - "traefik.http.services.bolt-dev.loadbalancer.server.port=5173"
       - "traefik.docker.network=dokploy-network"
+      # Middleware for COOP/COEP headers required by WebContainer API
+      - "traefik.http.middlewares.bolt-headers.headers.customresponseheaders.Cross-Origin-Opener-Policy=same-origin"
+      - "traefik.http.middlewares.bolt-headers.headers.customresponseheaders.Cross-Origin-Embedder-Policy=require-corp"
+      # Strip the /bolt prefix before forwarding to the app
+      - "traefik.http.middlewares.bolt-stripprefix.stripprefix.prefixes=/bolt"
+      # Apply both middlewares
+      - "traefik.http.routers.bolt-dev.middlewares=bolt-stripprefix,bolt-headers"
     environment:
       - NODE_ENV=development
       - VITE_HMR_PROTOCOL=ws
